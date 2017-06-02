@@ -1,10 +1,12 @@
-import SurveyForm from './SurveyForm';
-import reducer from './reducer';
-import sagas from './sagas';
+import SurveyFormContainer from './containers/SurveyForm';
+import {
+  FORM_SAVE_SUCCEED_ACTION,
+  FORM_SAVE_FAILED_ACTION,
+} from './containers/SurveyForm/constants';
 
-export default SurveyForm;
+export default SurveyFormContainer;
 export {
-  SurveyForm,
-  reducer,
-  sagas,
+  SurveyFormContainer,
+  FORM_SAVE_SUCCEED_ACTION,
+  FORM_SAVE_FAILED_ACTION,
 };
