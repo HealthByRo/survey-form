@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import connectWithBackend from 'redux-connect-backend';
 import _get from 'lodash/get';
+import _forIn from 'lodash/forIn';
 import Spin from 'antd/lib/spin';
 import createSurveyForm from '../../components/SurveyForm';
 import {
@@ -66,22 +67,16 @@ export default class SurveyFormContainer extends PureComponent {
 
   onSubmit(valuesMap) {
     const {
-      surveyId,
-      updateSurveyItem,
       onFormSaveSucceedAction,
       onFormSaveFailedAction,
     } = this.props;
     const values = valuesMap.toJS();
     const saveItemPromises = [];
 
-    Object
-      .keys(values)
-      .forEach((fieldName) => {
-        const surveyItemId = getSurveyItemIdFromFieldName(fieldName);
-        const payload = getSurveyItemUpdatedPayload(values[fieldName]);
-        const promise = updateSurveyItem(surveyId, surveyItemId, payload);
-        saveItemPromises.push(promise);
-      });
+    _forIn(values, (fieldValue, fieldName) => {
+      const savePromise = this.saveItem(fieldValue, fieldName);
+      saveItemPromises.push(savePromise);
+    });
 
     return Promise
       .all(saveItemPromises)
@@ -103,6 +98,18 @@ export default class SurveyFormContainer extends PureComponent {
     });
 
     return initialValues;
+  }
+
+  saveItem(fieldValue, fieldName) {
+    const {
+      surveyId,
+      updateSurveyItem,
+    } = this.props;
+
+    const surveyItemId = getSurveyItemIdFromFieldName(fieldName);
+    const payload = getSurveyItemUpdatedPayload(fieldValue);
+
+    return updateSurveyItem(surveyId, surveyItemId, payload);
   }
 
   isEmpty() {

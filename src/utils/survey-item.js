@@ -1,8 +1,11 @@
 import _isArray from 'lodash/isArray';
 import _isString from 'lodash/isString';
 
+const FIELD_PREFIX = 'surveyItem';
+const REMOVE_FIELD_PREFIX_REG = new RegExp(`^${FIELD_PREFIX}`);
+
 export function getFieldName(surveyItem) {
-  return `surveyItem${surveyItem.id}`;
+  return `${FIELD_PREFIX}${surveyItem.id}`;
 }
 
 export function getFieldInitialValue(surveyItem) {
@@ -19,7 +22,7 @@ export function getFieldInitialValue(surveyItem) {
 }
 
 export function getSurveyItemIdFromFieldName(fieldName) {
-  return fieldName.slice(10);
+  return fieldName.replace(REMOVE_FIELD_PREFIX_REG, '');
 }
 
 export function getSurveyItemUpdatedPayload(fieldValue) {
