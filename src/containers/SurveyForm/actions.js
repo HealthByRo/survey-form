@@ -3,7 +3,7 @@ import {
   FORM_SAVE_FAILED_ACTION,
 } from './constants';
 
-export function formSaveSucceedAction(name) {
+export function formSaveSuccessAction(name) {
   return {
     type: FORM_SAVE_SUCCESS_ACTION,
     name,
