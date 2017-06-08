@@ -7,7 +7,7 @@ import _forIn from 'lodash/forIn';
 import Spin from 'antd/lib/spin';
 import createSurveyForm from '../../components/SurveyForm';
 import {
-  formSaveSucceedAction,
+  formSaveSuccessAction,
   formSaveFailedAction,
 } from './actions';
 import {
@@ -22,7 +22,7 @@ import {
 } from '../../utils/survey-item';
 
 const mapDispatchToProps = {
-  onFormSaveSucceedAction: formSaveSucceedAction,
+  onFormSaveSuccessAction: formSaveSuccessAction,
   onFormSaveFailedAction: formSaveFailedAction,
 };
 
@@ -30,6 +30,7 @@ const mapApiMethodsToActions = {
   getAllSurveyItems: getAllSurveyItemsApi,
   updateSurveyItem: updateSurveyItemApi,
 };
+
 
 @connect(null, mapDispatchToProps)
 @connectWithBackend(mapApiMethodsToActions)
@@ -39,7 +40,7 @@ export default class SurveyFormContainer extends PureComponent {
     getAllSurveyItems: PropTypes.func.isRequired,
     getAllSurveyItemsResult: PropTypes.object,
     updateSurveyItem: PropTypes.func.isRequired,
-    onFormSaveSucceedAction: PropTypes.func.isRequired,
+    onFormSaveSuccessAction: PropTypes.func.isRequired,
     onFormSaveFailedAction: PropTypes.func.isRequired,
   };
 
@@ -67,7 +68,7 @@ export default class SurveyFormContainer extends PureComponent {
 
   onSubmit(valuesMap) {
     const {
-      onFormSaveSucceedAction,
+      onFormSaveSuccessAction,
       onFormSaveFailedAction,
     } = this.props;
     const values = valuesMap.toJS();
@@ -81,7 +82,7 @@ export default class SurveyFormContainer extends PureComponent {
     return Promise
       .all(saveItemPromises)
       .then(() => {
-        onFormSaveSucceedAction(this.formName);
+        onFormSaveSuccessAction(this.formName);
       })
       .catch(() => {
         onFormSaveFailedAction(this.formName);
