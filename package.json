@@ -23,18 +23,19 @@
   },
   "pre-commit": "lint:staged",
   "dependencies": {
-    "antd": "^2.10.0",
+    "antd": "^2.11.1",
     "axios": "^0.16.1",
     "prop-types": "^15.5.9",
+    "react-form-fields": "https://bitbucket.org/arabellatech/react-form-fields#develop",
     "react-redux": "^5.0.4",
     "react-router": "3.0.0",
     "redux-connect-backend": "https://bitbucket.org/arabellatech/redux-connect-backend.git#develop",
-    "react-form-fields": "https://bitbucket.org/arabellatech/react-form-fields#develop",
-    "validators": "https://bitbucket.org/arabellatech/validators#develop",
     "redux-form": "^6.7.0",
     "redux-immutable": "^4.0.0",
     "redux-saga": "^0.15.3",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "return-deep-diff": "^0.2.7",
+    "validators": "https://bitbucket.org/arabellatech/validators#develop"
   },
   "peerDependencies": {
     "react": "15.x",
