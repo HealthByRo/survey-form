@@ -5,6 +5,7 @@ import connectWithBackend from 'redux-connect-backend';
 import _get from 'lodash/get';
 import _forIn from 'lodash/forIn';
 import Spin from 'antd/lib/spin';
+import diff from 'return-deep-diff';
 import createSurveyForm from '../../components/SurveyForm';
 import {
   formSaveSuccessAction,
@@ -30,7 +31,6 @@ const mapApiMethodsToActions = {
   getAllSurveyItems: getAllSurveyItemsApi,
   updateSurveyItem: updateSurveyItemApi,
 };
-
 
 @connect(null, mapDispatchToProps)
 @connectWithBackend(mapApiMethodsToActions)
@@ -66,15 +66,17 @@ export default class SurveyFormContainer extends PureComponent {
     getAllSurveyItems(surveyId);
   }
 
-  onSubmit(valuesMap) {
+  onSubmit(values) {
     const {
       onFormSaveSuccessAction,
       onFormSaveFailedAction,
     } = this.props;
-    const values = valuesMap.toJS();
     const saveItemPromises = [];
 
-    _forIn(values, (fieldValue, fieldName) => {
+
+    const changedValues = diff(this.getInitialValues(), values.toJS());
+
+    _forIn(changedValues, (fieldValue, fieldName) => {
       const savePromise = this.saveItem(fieldValue, fieldName);
       saveItemPromises.push(savePromise);
     });
