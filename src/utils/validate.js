@@ -7,5 +7,5 @@ export function getValidateForQuestion(question) {
     validate.push(requiredValidator);
   }
 
-  return requiredValidator;
+  return validate;
 }
