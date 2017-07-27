@@ -12,6 +12,7 @@ survey-form module is a module with **SurveyForm** container which render survey
 
 ## Install survey-form in your-project
 1. Run `yarn add https://bitbucket.org/arabellatech/survey-form`
+2. Add to your project reducers and sagas from **redux-connect-backend** module. [Click here](https://bitbucket.org/arabellatech/redux-connect-backend) for further information
 
 ## Usage
 
