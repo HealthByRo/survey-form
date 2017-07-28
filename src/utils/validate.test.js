@@ -10,14 +10,14 @@ describe('validate', () => {
       expect(validators).toEqual([requiredValidator]);
     });
 
-    it('should return emoty list of validators if question is not required', () => {
+    it('should return empty list of validators if question is not required', () => {
       const question = { required: false };
       const validators = getValidateForQuestion(question);
 
       expect(validators).toEqual([]);
     });
 
-    it('should return emoty list of validators if question has not required property', () => {
+    it('should return empty list of validators if question has not required property', () => {
       const question = {};
       const validators = getValidateForQuestion(question);
 

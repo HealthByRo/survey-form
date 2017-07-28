@@ -22,7 +22,7 @@ describe('surveys API functions', () => {
       { id: 5 },
     ];
 
-    it('should make request with ordering parmas and return promise and resolve it with getSurveyResponse when calling getAllSurveyItems', (done) => {
+    it('should make request with ordering params and return promise and resolve it with getSurveyResponse', (done) => {
       mock.onGet(`/surveys/${surveyId}/items`, { params: { ordering: 'position' } }).reply(200, getSurveyItemsResponse);
 
       getAllSurveyItems(surveyId)
@@ -32,7 +32,7 @@ describe('surveys API functions', () => {
         });
     });
 
-    it('should make request with passed ordering parmas and return promise and resolve it with getSurveyResponse when calling getAllSurveyItems', (done) => {
+    it('should make request with passed ordering params and return promise and resolve it with getSurveyResponse', (done) => {
       mock.onGet(`/surveys/${surveyId}/items`, { params: { ordering: '-id', some: 'other' } }).reply(200, getSurveyItemsResponse);
 
       getAllSurveyItems(surveyId, { ordering: '-id', some: 'other' })
@@ -51,7 +51,7 @@ describe('surveys API functions', () => {
       updated: true,
     };
 
-    it('should return promise and resolce it with updatedSurveyItem', (done) => {
+    it('should return promise and resolve it with updatedSurveyItem', (done) => {
       mock.onPatch(`/surveys/${surveyId}/items/${surveyItemId}`).reply(204, updatedSurveyItem);
 
       updateSurveyItem(surveyId, surveyItemId, updatedSurveyItem)
