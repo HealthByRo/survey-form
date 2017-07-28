@@ -8,6 +8,10 @@ export function getFieldName(surveyItem) {
   return `${FIELD_PREFIX}${surveyItem.id}`;
 }
 
+export function getSurveyItemIdFromFieldName(fieldName) {
+  return fieldName.replace(REMOVE_FIELD_PREFIX_REG, '');
+}
+
 export function getFieldInitialValue(surveyItem) {
   const questionType = surveyItem.relatedQuestionData.type;
 
@@ -19,10 +23,6 @@ export function getFieldInitialValue(surveyItem) {
     default:
       return surveyItem.answers;
   }
-}
-
-export function getSurveyItemIdFromFieldName(fieldName) {
-  return fieldName.replace(REMOVE_FIELD_PREFIX_REG, '');
 }
 
 export function getSurveyItemUpdatedPayload(fieldValue) {

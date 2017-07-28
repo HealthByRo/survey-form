@@ -8,8 +8,8 @@ import 'antd/lib/date-picker/style/css';
 
 import SurveyForm from './';
 
-storiesOf('TableContainer', module)
-  .add('without users', () => (
+storiesOf('Survey Form', module)
+  .add('example "Health Info" form', () => (
     <Card title="Survey Form">
       <SurveyForm surveyId={5} />
     </Card>

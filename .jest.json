@@ -1,14 +1,18 @@
 {
+  "testURL": "https://test.com/",
   "collectCoverageFrom": [
-    "app/**/*.{js,jsx}",
-    "!app/**/*.test{s}.{js,jsx}"
+    "src/**/*.{js,jsx}",
+    "!src/**/*.test{s}.{js,jsx}",
+    "!src/**/*.stories.js"
   ],
   "moduleDirectories": [
     "node_modules",
     "src"
   ],
-  "moduleNameMapper": {
-    "\\.(css|less)$": "identity-obj-proxy"
-  },
-  "testRegex": "src/.*\\.test[s]?\\.js$"
+  "testPathIgnorePatterns": [
+    "/node_modules/",
+    ".stories.js"
+  ],
+  "testRegex": "src/.*\\.test[s]?\\.js$",
+  "setupTestFrameworkScriptFile": "<rootDir>/scripts/test-bundler.js"
 }

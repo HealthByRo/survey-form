@@ -73,7 +73,6 @@ export default class SurveyFormContainer extends PureComponent {
     } = this.props;
     const saveItemPromises = [];
 
-
     const changedValues = diff(this.getInitialValues(), values.toJS());
 
     _forIn(changedValues, (fieldValue, fieldName) => {
