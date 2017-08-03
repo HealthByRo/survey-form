@@ -17,7 +17,10 @@
     "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern 'flow-typed/' --ignore-pattern 'lib/' src/**",
     "lint:js": "npm run lint:eslint -- src/ ",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "prerelease": "git checkout develop",
+    "release": "npm version",
+    "postrelease": "git push && git push --tags && git checkout master && git merge develop && git push && git checkout develop"
   },
   "lint-staged": {
     "*.js": "lint:eslint"
