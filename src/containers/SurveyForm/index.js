@@ -37,6 +37,7 @@ const mapApiMethodsToActions = {
 export default class SurveyFormContainer extends PureComponent {
   static propTypes = {
     surveyId: PropTypes.number.isRequired,
+    readonly: PropTypes.bool,
     getAllSurveyItems: PropTypes.func.isRequired,
     getAllSurveyItemsResult: PropTypes.object,
     updateSurveyItem: PropTypes.func.isRequired,
@@ -46,6 +47,7 @@ export default class SurveyFormContainer extends PureComponent {
 
   static defaultProps = {
     getAllSurveyItemsResult: null,
+    readonly: false,
   };
 
   constructor(props) {
@@ -124,6 +126,7 @@ export default class SurveyFormContainer extends PureComponent {
         processing,
         data,
       },
+      readonly,
     } = this.props;
 
     const SurveyForm = this.surveyForm;
@@ -135,6 +138,7 @@ export default class SurveyFormContainer extends PureComponent {
             surveyItems={data}
             onSubmit={this.onSubmit}
             initialValues={this.getInitialValues()}
+            readonly={readonly}
           />
         }
         {!processing && this.isEmpty() && <p>No items.</p>}

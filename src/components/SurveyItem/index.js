@@ -7,7 +7,12 @@ export default class SurveyItem extends PureComponent {
   static propTypes = {
     relatedQuestionData: PropTypes.object.isRequired,
     answers: PropTypes.array.isRequired,
+    readonly: PropTypes.bool,
   };
+
+  static defaultProps = {
+    readonly: false,
+  }
 
   constructor(props) {
     super(props);
@@ -39,6 +44,7 @@ export default class SurveyItem extends PureComponent {
     const {
       relatedQuestionData,
       answers,
+      readonly,
     } = this.props;
     const AnswerComponent = this.answersComponent;
 
@@ -50,6 +56,7 @@ export default class SurveyItem extends PureComponent {
           fieldName={this.fieldName}
           question={relatedQuestionData}
           answers={answers}
+          readonly={readonly}
         />
       </div>
     );
