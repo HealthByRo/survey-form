@@ -12,6 +12,7 @@ function TextAnswerComponent(props) {
   const {
     fieldName,
     question,
+    readonly,
   } = props;
   const validate = getValidateForQuestion(question);
 
@@ -20,6 +21,7 @@ function TextAnswerComponent(props) {
       name={fieldName}
       component={TextField}
       validate={validate}
+      disabled={readonly}
     />
   );
 }
@@ -27,6 +29,11 @@ function TextAnswerComponent(props) {
 TextAnswerComponent.propTypes = {
   fieldName: PropTypes.string.isRequired,
   question: PropTypes.object.isRequired,
+  readonly: PropTypes.bool,
+};
+
+TextAnswerComponent.defaultProps = {
+  readonly: false,
 };
 
 export default TextAnswerComponent;

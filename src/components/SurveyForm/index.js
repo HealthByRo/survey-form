@@ -15,6 +15,7 @@ export default function createSurveyForm(surveyId) {
       pristine,
       submitting,
       valid,
+      readonly,
     } = props;
 
     const onSubmit = (event) => {
@@ -31,29 +32,36 @@ export default function createSurveyForm(surveyId) {
       <form onSubmit={onSubmit} noValidate>
         {surveyItems.map((surveyItem) =>
           <FormItem key={surveyItem.id} >
-            <SurveyItem {...surveyItem}>{surveyItem.id}</SurveyItem>
+            <SurveyItem readonly={readonly} {...surveyItem}>{surveyItem.id}</SurveyItem>
           </FormItem>
         )}
 
-        <FormItem>
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            loading={submitting}
-            disabled={pristine || submitting || !valid}
-          >SAVE</Button>
-        </FormItem>
+        {!readonly &&
+          <FormItem>
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              loading={submitting}
+              disabled={readonly || pristine || submitting || !valid}
+            >SAVE</Button>
+          </FormItem>
+        }
       </form>
     );
   };
 
   SurveyForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
+    readonly: PropTypes.bool,
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
     valid: PropTypes.bool.isRequired,
     surveyItems: PropTypes.array.isRequired,
+  };
+
+  SurveyForm.defaultProps = {
+    readonly: false,
   };
 
   return reduxForm({

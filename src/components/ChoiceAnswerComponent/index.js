@@ -19,6 +19,7 @@ export default function createChoiceAnswareComponent(type) {
     const {
       fieldName,
       question,
+      readonly,
     } = props;
     const options = mapQuestionAnswersToOptions(question.answers);
     const validate = getValidateForQuestion(question);
@@ -29,6 +30,7 @@ export default function createChoiceAnswareComponent(type) {
         options={options}
         component={ChoiceComponent}
         validate={validate}
+        disabled={readonly}
       />
     );
   }
@@ -36,6 +38,11 @@ export default function createChoiceAnswareComponent(type) {
   ChoiceAnswerComponent.propTypes = {
     fieldName: PropTypes.string.isRequired,
     question: PropTypes.object.isRequired,
+    readonly: PropTypes.bool,
+  };
+
+  ChoiceAnswerComponent.defaultProps = {
+    readonly: false,
   };
 
   return ChoiceAnswerComponent;
@@ -47,4 +54,3 @@ function mapQuestionAnswersToOptions(choices) {
     label: choice.text,
   }));
 }
-
