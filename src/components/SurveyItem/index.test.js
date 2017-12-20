@@ -28,6 +28,7 @@ describe('SurveyItem', () => {
         answers: props.answers,
         fieldName: `surveyItem${props.id}`,
         question: props.relatedQuestionData,
+        readonly: false,
       });
     });
 

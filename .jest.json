@@ -14,5 +14,8 @@
     ".stories.js"
   ],
   "testRegex": "src/.*\\.test[s]?\\.js$",
-  "setupTestFrameworkScriptFile": "<rootDir>/scripts/test-bundler.js"
+  "setupFiles": [
+      "raf/polyfill",
+      "<rootDir>/scripts/test-bundler.js"
+  ]
 }
