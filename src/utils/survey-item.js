@@ -1,5 +1,8 @@
 import _isArray from 'lodash/isArray';
 import _isString from 'lodash/isString';
+import { AllHtmlEntities as Entities } from 'html-entities';
+
+const entities = new Entities();
 
 const FIELD_PREFIX = 'surveyItem';
 const REMOVE_FIELD_PREFIX_REG = new RegExp(`^${FIELD_PREFIX}`);
@@ -17,7 +20,7 @@ export function getFieldInitialValue(surveyItem) {
 
   switch (questionType) {
     case 'text':
-      return surveyItem.text;
+      return entities.decode(surveyItem.text);
     case 'choice':
       return surveyItem.answers[0];
     default:
