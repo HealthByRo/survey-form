@@ -5,52 +5,47 @@ import Radio from 'antd/lib/radio';
 import Checkbox from 'antd/lib/checkbox';
 import createFormField from 'react-form-fields/lib/createFormField';
 import createReduxFormField from 'react-form-fields/lib/createReduxFormField';
-import { getValidateForQuestion } from '../../utils/validate';
 
 const choiceComponents = {
   radio: createReduxFormField(createFormField(Radio.Group)),
   checkbox: createReduxFormField(createFormField(Checkbox.Group)),
 };
 
-export default function createChoiceAnswareComponent(type) {
+export default function createChoiceFieldAnswer(type) {
   const ChoiceComponent = choiceComponents[type];
 
-  function ChoiceAnswerComponent(props) {
+  function ChoiceFieldAnswer(props) {
     const {
       fieldName,
-      question,
+      label,
+      options,
       readonly,
     } = props;
-    const options = mapQuestionAnswersToOptions(question.answers);
-    const validate = getValidateForQuestion(question);
 
     return (
       <Field
+        component={ChoiceComponent}
+        disabled={readonly}
+        label={label}
         name={fieldName}
         options={options}
-        component={ChoiceComponent}
-        validate={validate}
-        disabled={readonly}
       />
     );
   }
 
-  ChoiceAnswerComponent.propTypes = {
+  ChoiceFieldAnswer.propTypes = {
     fieldName: PropTypes.string.isRequired,
-    question: PropTypes.object.isRequired,
+    label: PropTypes.string.isRequired,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })).isRequired,
     readonly: PropTypes.bool,
   };
 
-  ChoiceAnswerComponent.defaultProps = {
+  ChoiceFieldAnswer.defaultProps = {
     readonly: false,
   };
 
-  return ChoiceAnswerComponent;
-}
-
-function mapQuestionAnswersToOptions(choices) {
-  return choices.map((choice) => ({
-    value: choice.id,
-    label: choice.text,
-  }));
+  return ChoiceFieldAnswer;
 }

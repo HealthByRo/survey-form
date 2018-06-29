@@ -4,23 +4,22 @@ import { connect } from 'react-redux';
 import connectWithBackend from 'redux-connect-backend';
 import _get from 'lodash/get';
 import _forIn from 'lodash/forIn';
+import _isBoolean from 'lodash/isBoolean';
 import Spin from 'antd/lib/spin';
 import diff from 'return-deep-diff';
-import createSurveyForm from '../../components/SurveyForm';
+import createSurveyForm from '~/components/SurveyForm';
+import {
+  getHealthSurvey as getHealthSurveyApi,
+  postHealthSurvey as postHealthSurveyApi,
+} from '~/api/health-survey';
+import {
+  getFieldName,
+  getFieldInitialValue,
+} from '~/utils/survey-item';
 import {
   formSaveSuccessAction,
   formSaveFailedAction,
 } from './actions';
-import {
-  getAllSurveyItems as getAllSurveyItemsApi,
-  updateSurveyItem as updateSurveyItemApi,
-} from '../../api/surveys/items';
-import {
-  getFieldName,
-  getFieldInitialValue,
-  getSurveyItemIdFromFieldName,
-  getSurveyItemUpdatedPayload,
-} from '../../utils/survey-item';
 
 const mapDispatchToProps = {
   onFormSaveSuccessAction: formSaveSuccessAction,
@@ -28,101 +27,119 @@ const mapDispatchToProps = {
 };
 
 const mapApiMethodsToActions = {
-  getAllSurveyItems: getAllSurveyItemsApi,
-  updateSurveyItem: updateSurveyItemApi,
+  getHealthSurvey: getHealthSurveyApi,
+  postHealthSurvey: postHealthSurveyApi,
 };
 
 @connect(null, mapDispatchToProps)
 @connectWithBackend(mapApiMethodsToActions)
 export default class SurveyFormContainer extends PureComponent {
   static propTypes = {
-    surveyId: PropTypes.number.isRequired,
+    memberId: PropTypes.number.isRequired,
     readonly: PropTypes.bool,
-    getAllSurveyItems: PropTypes.func.isRequired,
-    getAllSurveyItemsResult: PropTypes.object,
-    updateSurveyItem: PropTypes.func.isRequired,
+    getHealthSurvey: PropTypes.func.isRequired,
+    getHealthSurveyResult: PropTypes.object,
+    postHealthSurvey: PropTypes.func.isRequired,
     onFormSaveSuccessAction: PropTypes.func.isRequired,
     onFormSaveFailedAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    getAllSurveyItemsResult: null,
+    getHealthSurveyResult: null,
     readonly: false,
   };
 
   constructor(props) {
     super(props);
 
-    const { surveyId } = this.props;
-    this.formName = `SurveyForm${surveyId}`;
-    this.surveyForm = createSurveyForm(surveyId);
-    this.onSubmit = this.onSubmit.bind(this);
+    const { memberId } = this.props;
+    this.formName = `SurveyForm${memberId}`;
+    this.surveyForm = createSurveyForm(memberId);
   }
 
   componentDidMount() {
     const {
-      surveyId,
-      getAllSurveyItems,
+      memberId,
+      getHealthSurvey,
     } = this.props;
 
-    getAllSurveyItems(surveyId);
+    getHealthSurvey(memberId);
   }
 
-  onSubmit(values) {
-    const {
-      onFormSaveSuccessAction,
-      onFormSaveFailedAction,
-    } = this.props;
-    const saveItemPromises = [];
-
-    const changedValues = diff(this.getInitialValues(), values.toJS());
-
-    _forIn(changedValues, (fieldValue, fieldName) => {
-      const savePromise = this.saveItem(fieldValue, fieldName);
-      saveItemPromises.push(savePromise);
-    });
-
-    return Promise
-      .all(saveItemPromises)
-      .then(() => {
-        onFormSaveSuccessAction(this.formName);
-      })
-      .catch(() => {
-        onFormSaveFailedAction(this.formName);
-      });
+  getHealthSurvey() {
+    return this.props.getHealthSurveyResult.data;
   }
 
   getInitialValues() {
-    const surveyItems = this.props.getAllSurveyItemsResult.data;
+    const surveyItems = this.getHealthSurvey();
     const initialValues = {};
 
-    surveyItems.forEach((surveyItem) => {
-      const fieldName = getFieldName(surveyItem);
-      initialValues[fieldName] = getFieldInitialValue(surveyItem);
+    surveyItems.forEach((questionsCategory) => {
+      questionsCategory.questions.forEach((question) => {
+        const fieldName = getFieldName(question);
+        initialValues[fieldName] = getFieldInitialValue(question);
+      });
     });
 
     return initialValues;
   }
 
-  saveItem(fieldValue, fieldName) {
+  handleSubmit = async (_values) => {
     const {
-      surveyId,
-      updateSurveyItem,
+      onFormSaveSuccessAction,
+      onFormSaveFailedAction,
     } = this.props;
+    const saveAnswaresPromises = [];
+    const values = this.processValues(_values);
 
-    const surveyItemId = getSurveyItemIdFromFieldName(fieldName);
-    const payload = getSurveyItemUpdatedPayload(fieldValue);
+    _forIn(values, (answare, questionId) => {
+      const savePromise = this.saveAnsware(questionId, answare);
+      saveAnswaresPromises.push(savePromise);
+    });
 
-    return updateSurveyItem(surveyId, surveyItemId, payload);
+    try {
+      await Promise.all(saveAnswaresPromises);
+      onFormSaveSuccessAction(this.formName);
+    } catch (error) {
+      onFormSaveFailedAction(this.formName);
+    }
+  }
+
+  processValues(_values) {
+    const changedValues = diff(this.getInitialValues(), _values.toJS());
+    const values = {};
+
+    _forIn(changedValues, (_value, key) => {
+      if (_isBoolean(_value)) {
+        values[key] = _value ? 'Yes' : 'No';
+      } else {
+        values[key] = _value;
+      }
+    });
+
+    return values;
+  }
+
+  saveAnsware(questionId, answare) {
+    const {
+      memberId,
+      postHealthSurvey,
+    } = this.props;
+    const payload = {
+      question: questionId,
+      answer: answare,
+    };
+
+    return postHealthSurvey(memberId, payload);
   }
 
   isEmpty() {
-    return !_get(this.props.getAllSurveyItemsResult, 'data.length');
+    return !_get(this.getHealthSurvey(), 'length');
   }
 
   render() {
     const {
-      getAllSurveyItemsResult: {
+      getHealthSurveyResult: {
         processing,
         data,
       },
@@ -133,15 +150,24 @@ export default class SurveyFormContainer extends PureComponent {
 
     return (
       <Spin spinning={processing}>
-        {!processing && !this.isEmpty() &&
-          <SurveyForm
-            surveyItems={data}
-            onSubmit={this.onSubmit}
-            initialValues={this.getInitialValues()}
-            readonly={readonly}
-          />
+        {!processing && !this.isEmpty()
+          && (
+            <SurveyForm
+              surveyItems={data}
+              onSubmit={this.handleSubmit}
+              initialValues={this.getInitialValues()}
+              readonly={readonly}
+            />
+          )
         }
-        {!processing && this.isEmpty() && <p>No items.</p>}
+
+        {!processing && this.isEmpty()
+          && (
+            <p>
+              No items.
+            </p>
+          )
+        }
       </Spin>
     );
   }

@@ -1,6 +1,6 @@
 // import React from 'react';
 // import { createComponentWithIntl } from 'react-unit-testing-utils';
-import createSurveyForm from './';
+import createSurveyForm from '.';
 // import { surveyItems } from '../../../scripts/test-data.js';
 
 const SurveyForm = createSurveyForm(123);

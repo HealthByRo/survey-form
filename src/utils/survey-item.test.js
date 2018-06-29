@@ -1,82 +1,80 @@
 import {
   getFieldName,
-  getSurveyItemIdFromFieldName,
   getFieldInitialValue,
-  getSurveyItemUpdatedPayload,
 } from './survey-item';
 
 describe('utils: survey-item', () => {
-  it('should return field name when calling getFieldName(surveyItem)', () => {
-    const surveyItem = { id: 123 };
-    expect(getFieldName(surveyItem)).toEqual('surveyItem123');
+  it('should return field name when calling getFieldName(question)', () => {
+    const question = { id: 123 };
+    expect(getFieldName(question)).toEqual('123');
   });
 
-  it('should return field name when calling getSurveyItemIdFromFieldName("surveyItemFirstNameId")', () => {
-    expect(getSurveyItemIdFromFieldName('surveyItemfirstNameId')).toEqual('firstNameId');
-  });
-
-  describe('getFieldInitialValue(surveyItem)', () => {
-    it('should return initial value for survey item when related qauestion is "text" type', () => {
-      const surveyItem = {
-        relatedQuestionData: {
+  describe('getFieldInitialValue(question)', () => {
+    it('should return initial value for survey item when question type is "text" ', () => {
+      const question = {
+        meta: {
           type: 'text',
         },
-        text: 'Some text value',
+        answers: [{
+          answer: 'Foo',
+        }],
       };
 
-      expect(getFieldInitialValue(surveyItem)).toEqual(surveyItem.text);
+      expect(getFieldInitialValue(question)).toEqual(question.answers[0].answer);
     });
 
-    it('should return initial value for survey item when related qauestion is "choice" type', () => {
-      const surveyItem = {
-        relatedQuestionData: {
-          type: 'choice',
+    it('should return initial value for survey item when question type is "radio" ', () => {
+      const question = {
+        meta: {
+          type: 'radio',
         },
-        text: 'Some text value',
-        answers: [
-          'one',
-          'two',
-          'three',
-        ],
+        answers: [{
+          answer: 'Foo',
+        }],
       };
 
-      expect(getFieldInitialValue(surveyItem)).toEqual(surveyItem.answers[0]);
+      expect(getFieldInitialValue(question)).toEqual(question.answers[0].answer);
     });
 
-    it('should return initial value for survey item when related qauestion is any other type', () => {
-      const surveyItem = {
-        relatedQuestionData: {
+    it('should return initial value for survey item when question type is "checkbox" and answer is "Yes"', () => {
+      const question = {
+        meta: {
+          type: 'checkbox',
+        },
+        answers: [{
+          answer: 'Yes',
+        }],
+      };
+
+      expect(getFieldInitialValue(question)).toBeTruthy();
+    });
+
+    it('should return initial value for survey item when question type is "checkbox" and answer is "No"', () => {
+      const question = {
+        meta: {
+          type: 'checkbox',
+        },
+        answers: [{
+          answer: 'No',
+        }],
+      };
+
+      expect(getFieldInitialValue(question)).toBeFalsy();
+    });
+
+    it('should return initial value for survey item when question type is "multichoice"', () => {
+      const question = {
+        meta: {
           type: 'multichoice',
         },
-        text: 'Some text value',
-        answers: [
-          'one',
-          'two',
-          'three',
-        ],
+        answers: [{
+          answer: 'Foo',
+        }, {
+          answer: 'Bar',
+        }],
       };
 
-      expect(getFieldInitialValue(surveyItem)).toEqual(surveyItem.answers);
-    });
-  });
-
-  describe('getSurveyItemUpdatedPayload(fieldValue)', () => {
-    it('should return object with "answers" property which contains array, when "fieldValue" is an array', () => {
-      const fieldValue = [1, 2, 3, 4];
-
-      expect(getSurveyItemUpdatedPayload(fieldValue)).toEqual({ answers: fieldValue });
-    });
-
-    it('should return object with "text" property which contains text, when "fieldValue" is a string', () => {
-      const fieldValue = 'Some text';
-
-      expect(getSurveyItemUpdatedPayload(fieldValue)).toEqual({ text: fieldValue });
-    });
-
-    it('should return object with "answers" property which contains array, when "fieldValue" is any other type', () => {
-      const fieldValue = 1;
-
-      expect(getSurveyItemUpdatedPayload(fieldValue)).toEqual({ answers: [fieldValue] });
+      expect(getFieldInitialValue(question)).toEqual(['Foo', 'Bar']);
     });
   });
 });

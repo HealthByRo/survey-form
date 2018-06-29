@@ -6,11 +6,11 @@ import 'antd/lib/table/style/css';
 import 'antd/lib/select/style/css';
 import 'antd/lib/date-picker/style/css';
 
-import SurveyForm from './';
+import SurveyForm from '.';
 
 storiesOf('Survey Form', module)
   .add('example "Health Info" form', () => (
     <Card title="Survey Form">
-      <SurveyForm surveyId={5} />
+      <SurveyForm memberId={5} />
     </Card>
   ));

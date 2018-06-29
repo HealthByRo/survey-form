@@ -1,41 +1,35 @@
-import _isArray from 'lodash/isArray';
-import _isString from 'lodash/isString';
+import _get from 'lodash/get';
 import { AllHtmlEntities as Entities } from 'html-entities';
+import {
+  TYPE_CHECKBOX,
+  TYPE_MULTICHOICE,
+  TYPE_RADIO,
+  TYPE_TEXT,
+} from '../constants';
 
 const entities = new Entities();
 
-const FIELD_PREFIX = 'surveyItem';
-const REMOVE_FIELD_PREFIX_REG = new RegExp(`^${FIELD_PREFIX}`);
-
-export function getFieldName(surveyItem) {
-  return `${FIELD_PREFIX}${surveyItem.id}`;
+export function getFieldName(question) {
+  return String(question.id);
 }
 
-export function getSurveyItemIdFromFieldName(fieldName) {
-  return fieldName.replace(REMOVE_FIELD_PREFIX_REG, '');
-}
+export function getFieldInitialValue(question) {
+  const {
+    answers,
+    meta: {
+      type,
+    },
+  } = question;
+  const answer = entities.decode(_get(answers, '0.answer', ''));
 
-export function getFieldInitialValue(surveyItem) {
-  const questionType = surveyItem.relatedQuestionData.type;
-
-  switch (questionType) {
-    case 'text':
-      return entities.decode(surveyItem.text);
-    case 'choice':
-      return surveyItem.answers[0];
+  switch (type) {
+    case TYPE_TEXT:
+    case TYPE_RADIO:
+      return answer;
+    case TYPE_CHECKBOX:
+      return answer === 'Yes';
+    case TYPE_MULTICHOICE:
     default:
-      return surveyItem.answers;
+      return answers.map((item) => item.answer);
   }
-}
-
-export function getSurveyItemUpdatedPayload(fieldValue) {
-  if (_isArray(fieldValue)) {
-    return { answers: fieldValue };
-  }
-
-  if (_isString(fieldValue)) {
-    return { text: fieldValue };
-  }
-
-  return { answers: [fieldValue] };
 }

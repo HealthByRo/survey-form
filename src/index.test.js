@@ -1,7 +1,7 @@
 import SurveyFormContainer, {
   FORM_SAVE_SUCCESS_ACTION,
   FORM_SAVE_FAILED_ACTION,
-} from './';
+} from '.';
 
 describe('index export', () => {
   it('should export SurveyFormContainer', () => {
