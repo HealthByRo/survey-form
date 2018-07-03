@@ -1,6 +1,6 @@
 {
   "name": "survey-form",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Survey form",
   "main": "lib/index.js",
   "repository": "git@bitbucket.org:arabellatech/survey-form.git",
