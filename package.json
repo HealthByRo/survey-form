@@ -30,7 +30,7 @@
   "dependencies": {
     "react-form-fields": "https://bitbucket.org/healthbyro/react-form-fields#^1.3.0",
     "return-deep-diff": "^0.3.0",
-    "validators": "https://bitbucket.org/healthbyro/validators#^2.3.0"
+    "validators": "https://bitbucket.org/healthbyro/validators#^2.3.3"
   },
   "devDependencies": {
     "@kadira/react-storybook-decorator-centered": "^1.1.2",
